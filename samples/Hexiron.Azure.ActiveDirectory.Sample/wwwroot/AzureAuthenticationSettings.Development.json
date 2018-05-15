@@ -1,0 +1,16 @@
+﻿{
+  "Enabled": false,
+  "AzureAdSettings": {
+    "Tenant": "b2ctest.onmicrosoft.com",
+    "ClientId": "e7257755-91a7-4aa9-9d96-7e3735a29279"
+  },
+  "AzureB2CSettings": {
+    "ClientId": "826f51e5-14f9-4a69-a1e3-4ae80e2aaf0e",
+    "Tenant": "b2ctest.onmicrosoft.com",
+    "SignUpSignInPolicyId": "B2C_1_signin",
+    "ResetPasswordPolicyId": "b2c_1_reset",
+    "EditProfilePolicyId": "b2c_1_edit_profile",
+    "RedirectUri": "https://localhost:44340//signin-oidc",
+    "ClientSecret": "iSS]17=vtwA*P*D-AE68pA5O"
+  }
+}

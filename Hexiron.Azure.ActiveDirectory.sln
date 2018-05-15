@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2020
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hexiron.Azure.ActiveDirectory", "src\Hexiron.Azure.ActiveDirectory\Hexiron.Azure.ActiveDirectory.csproj", "{DCD273F5-E436-4171-BC5F-636B3855214A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7E66E394-DC83-4896-962C-CB6161278E70}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		build.ps1 = build.ps1
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C5E1D88B-9B24-4C09-994E-516FA166F9FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{2B59F664-25C6-4369-A15E-BCCD41AB13E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexiron.Azure.ActiveDirectory.Sample", "samples\Hexiron.Azure.ActiveDirectory.Sample\Hexiron.Azure.ActiveDirectory.Sample.csproj", "{32C5C94F-54F9-40CE-A31D-12775AE2009C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DCD273F5-E436-4171-BC5F-636B3855214A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCD273F5-E436-4171-BC5F-636B3855214A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCD273F5-E436-4171-BC5F-636B3855214A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCD273F5-E436-4171-BC5F-636B3855214A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32C5C94F-54F9-40CE-A31D-12775AE2009C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32C5C94F-54F9-40CE-A31D-12775AE2009C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32C5C94F-54F9-40CE-A31D-12775AE2009C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32C5C94F-54F9-40CE-A31D-12775AE2009C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DCD273F5-E436-4171-BC5F-636B3855214A} = {C5E1D88B-9B24-4C09-994E-516FA166F9FA}
+		{32C5C94F-54F9-40CE-A31D-12775AE2009C} = {2B59F664-25C6-4369-A15E-BCCD41AB13E7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7E7D94C2-7810-4399-AE23-05470D592F1B}
+	EndGlobalSection
+EndGlobal
