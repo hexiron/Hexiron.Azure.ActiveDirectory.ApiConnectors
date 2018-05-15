@@ -15,14 +15,14 @@ When accessing an API through one of these connecters, it gets in background an 
 ### 1. Create a new ASP.NET Core project ###
 In Visual Studio 2017.
 ### 2. Add dependency in csproj manually or using NuGet ###
-Install the latest:
+Install the latest nuget package:
 
-- Hexiron.AspNetCore.Authentication.AzureAdMixed 
+- Hexiron.Azure.ActiveDirectory
 
 in csproj:
 
 ```xml
-<PackageReference Include="Hexiron.AspNetCore.Authentication.AzureAdMixed" Version="x.x.x" />
+<PackageReference Include="Hexiron.Azure.ActiveDirectory" Version="x.x.x" />
 ```
 
 ### 3. Create an azureauthenticationsettings.json file. 
@@ -58,14 +58,14 @@ In the startup.cs class, register the AzureConfiguration and the connectors you 
 public void ConfigureServices(IServiceCollection services)  
     {  
         //...  
-		services.AddTransient<IAzureAdSecuredApiConnector, AzureAdSecuredApiConnector>();
+	services.AddTransient<IAzureAdSecuredApiConnector, AzureAdSecuredApiConnector>();
         services.AddTransient<IAzureB2CSecuredApiConnector, AzureB2CSecuredApiConnector>();
         services.AddTransient<IGraphApiConnector, GraphApiConnector>();
 
         var azureConfiguration = AzureSettingsLoader.LoadAzureAdConfiguration(_environment);
         // register Azure Settings to be able to use the IOptions pattern via DI
         services.Configure<AzureAuthenticationSettings>(azureConfiguration);
-		//...  
+	//...  
     }  
 ```
 
