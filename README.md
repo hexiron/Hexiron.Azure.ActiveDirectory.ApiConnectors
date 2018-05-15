@@ -1,5 +1,8 @@
 # Getting started with ASP.NET Core 2 and Azure AD/B2C OAuth2 flows
 
+[![Build status](https://ci.appveyor.com/api/projects/status/snx0tdnj8930gsr9/branch/master?svg=true)](https://ci.appveyor.com/project/hexiron/Hexiron.Azure.ActiveDirectory/branch/master)  [![license](https://img.shields.io/github/license/hexiron/Hexiron.Azure.ActiveDirectory.svg?maxAge=2592000)](https://github.com/hexiron/Hexiron.Azure.ActiveDirectory/blob/master/LICENSE)  [![NuGet](https://img.shields.io/nuget/v/Hexiron.Azure.ActiveDirectory.svg?maxAge=86400)](https://www.nuget.org/packages/Hexiron.Azure.ActiveDirectory/)
+
+
 Hexiron.Azure.ActiveDirectory has easy to use Azure connectors to connect with Azure AD secured API's using OAuth2 flows.
 When accessing an API through one of these connecters, it gets in background an access token from the Microsoft identity provider and adds it to the request.
 
