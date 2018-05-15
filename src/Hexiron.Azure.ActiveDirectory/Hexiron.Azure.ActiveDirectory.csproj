@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Michael Keymolen</Authors>
+    <Company>Hexiron BVBA</Company>
+    <Description>.NetStandard library for accessing easily Azure AD/B2C secured API's via Oauth2 and getting information via the Graph Api</Description>
+    <Copyright>Hexiron BVBA</Copyright>
+    <PackageLicenseUrl>https://github.com/hexiron/Hexiron.Azure.ActiveDirectory/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/hexiron/Hexiron.Azure.ActiveDirectory</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hexiron/Hexiron.Azure.ActiveDirectory</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageTags>Oauth2 Azure Active directory B2C Graph Api</PackageTags>
+    <Version>1.0.1</Version>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
