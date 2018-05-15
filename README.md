@@ -51,7 +51,7 @@ We use the following example:
 }
 ```
 
-### 4. Register the serivices for the middleware
+### 4. Register the services for the middleware
 In the startup.cs class, register the AzureConfiguration and the connectors you need:
   
 ```csharp  
@@ -69,35 +69,34 @@ public void ConfigureServices(IServiceCollection services)
     }  
 ```
 
-Make sure you can inject the IHostingEnvironment interface. This is needed to load the correct settingsfile. You can inject the IHostingEnvironmnet in the startup.cs class by using property injection. The default WebhostBuilder from AspNetCore has already registered the implementation for you.  
-Also specify the assembly where your controllers are situated so it can load the correct Authorization policies from you controllers.
+Make sure you inject the IHostingEnvironment interface. This is needed to load the correct settingsfile. You can inject the IHostingEnvironmnet in the startup.cs class by using property injection. The default WebhostBuilder from AspNetCore has already registered the implementation for you.  
 
 
 ```csharp  
 private readonly IHostingEnvironment _environment;
-        public Startup(IHostingEnvironment environment)
-        {
-            _environment = environment;
-        }
+public Startup(IHostingEnvironment environment)
+{
+    _environment = environment;
+}
 ```
 ### 5. Use the Connectors via Dependency Injection
 In the example below we access the connectors immediately in the controllers, but it is recommended to add a mediator in a real application to abstract controllers from any business logic
 
 ```csharp  
 public class ExampleController : Controller
+{
+    private readonly IAzureAdSecuredApiConnector _azureAdSecuredApiConnector;
+    private readonly AzureB2CSettings _azureB2CSettings;
+
+    public ExampleController(IAzureAdSecuredApiConnector azureAdSecuredApiConnector, IOptions<AzureAuthenticationSettings> azureSettingsAccessor)
     {
-        private readonly IAzureAdSecuredApiConnector _azureAdSecuredApiConnector;
-        private readonly AzureB2CSettings _azureB2CSettings;
-
-        public ExampleController(IAzureAdSecuredApiConnector azureAdSecuredApiConnector, IOptions<AzureAuthenticationSettings> azureSettingsAccessor)
-        {
-            _azureAdSecuredApiConnector = azureAdSecuredApiConnector;
-            _azureB2CSettings = azureSettingsAccessor.Value.AzureB2CSettings;
-        }
-
-        public async Task<ExampleDto> Index()
-        {
-            return await _azureAdSecuredApiConnector.Get<ExampleDto>("http://localhost", "azureResourceId");
-        }
+        _azureAdSecuredApiConnector = azureAdSecuredApiConnector;
+        _azureB2CSettings = azureSettingsAccessor.Value.AzureB2CSettings;
     }
+
+    public async Task<ExampleDto> Index()
+    {
+        return await _azureAdSecuredApiConnector.Get<ExampleDto>("http://localhost", "azureResourceId");
+    }
+}
 ```
