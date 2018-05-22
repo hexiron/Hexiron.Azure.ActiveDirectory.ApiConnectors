@@ -35,7 +35,8 @@ We use the following example:
   "Enabled": true,
   "AzureAdSettings": {
     "Tenant": "tentantname.onmicrosoft.com",
-    "ClientId": "aaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa"
+    "ClientId": "aaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa",
+	"ClientSecret": "fc54rg4d5gx4s5fg5dswrg"
   },
   "AzureB2CSettings": {
     "ClientId": "aaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa",

@@ -2,7 +2,8 @@
   "Enabled": false,
   "AzureAdSettings": {
     "Tenant": "b2ctest.onmicrosoft.com",
-    "ClientId": "e7257755-91a7-4aa9-9d96-7e3735a29279"
+    "ClientId": "e7257755-91a7-4aa9-9d96-7e3735a29279",
+    "ClientSecret": "fc54rg4d5gx4s5fg5dswrg"
   },
   "AzureB2CSettings": {
     "ClientId": "826f51e5-14f9-4a69-a1e3-4ae80e2aaf0e",
