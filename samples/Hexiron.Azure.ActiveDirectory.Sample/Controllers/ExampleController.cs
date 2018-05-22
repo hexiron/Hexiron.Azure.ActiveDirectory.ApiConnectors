@@ -20,6 +20,7 @@ namespace Hexiron.Azure.ActiveDirectory.Sample.Controllers
 
         public async Task<ExampleDto> Index()
         {
+            _azureAdSecuredApiConnector.AddDefaultHeader("custom-key","value");
             return await _azureAdSecuredApiConnector.Get<ExampleDto>("http://localhost", "azureResourceId");
         }
     }

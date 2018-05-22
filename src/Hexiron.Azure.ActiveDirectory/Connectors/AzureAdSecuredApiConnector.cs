@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl.Http;
@@ -13,16 +14,20 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
     {
         private readonly AuthenticationContext _authenticationContext;
         private readonly ClientCredential _clientCredential;
+        private readonly Dictionary<string, string> _defaultHeaders;
         public AzureAdSecuredApiConnector(IOptions<AzureAuthenticationSettings> options)
         {
             _authenticationContext = new AuthenticationContext(options.Value.AzureAdSettings.Authority);
             _clientCredential = new ClientCredential(options.Value.AzureAdSettings.ClientId, options.Value.AzureAdSettings.ClientSecret);
-
+            _defaultHeaders = new Dictionary<string, string>();
         }
+
         public async Task<HttpResponseMessage> Post(string url, object objectToBePosted, string azureResourceId)
         {
             var token = await _authenticationContext.AcquireTokenAsync(azureResourceId, _clientCredential);
-            return await url.WithOAuthBearerToken(token.AccessToken).PostJsonAsync(objectToBePosted);
+            return await url.WithOAuthBearerToken(token.AccessToken)
+                    .WithHeaders(_defaultHeaders)
+                    .PostJsonAsync(objectToBePosted);
         }
 
         public async Task<T> Put<T>(string url, object objectToBePosted, string azureResourceId, int requestTimeoutInSec = 60)
@@ -30,6 +35,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
             var token = await _authenticationContext.AcquireTokenAsync(azureResourceId, _clientCredential);
             return await url.WithOAuthBearerToken(token.AccessToken)
                 .WithTimeout(requestTimeoutInSec)
+                .WithHeaders(_defaultHeaders)
                 .PutJsonAsync(objectToBePosted)
                 .ReceiveJson<T>();
         }
@@ -41,6 +47,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
                 var token = await _authenticationContext.AcquireTokenAsync(azureResourceId, _clientCredential);
                 return await url.WithOAuthBearerToken(token.AccessToken)
                     .WithTimeout(requestTimeoutInSec)
+                    .WithHeaders(_defaultHeaders)
                     .GetJsonAsync<T>();
             }
             catch (FlurlHttpException ex)
@@ -58,6 +65,18 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
         {
             var token = await _authenticationContext.AcquireTokenAsync(azureResourceId, _clientCredential);
             return await url.WithOAuthBearerToken(token.AccessToken).DeleteAsync();
+        }
+
+        public void AddDefaultHeader(string name, string value)
+        {
+            _defaultHeaders.Add(name,value);
+        }
+        public void AddDefaultHeaders(IDictionary<string,string> defaultHeaders)
+        {
+            foreach (var header in defaultHeaders)
+            {
+                _defaultHeaders.Add(header.Key, header.Value);
+            }
         }
     }
 }
