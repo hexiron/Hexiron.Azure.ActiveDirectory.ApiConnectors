@@ -1,11 +1,4 @@
 #---------------------------------#
-#      general configuration      #
-#---------------------------------#
-
-# version format
-version: '{version}'
-
-#---------------------------------#
 #    environment configuration    #
 #---------------------------------#
 image: Visual Studio 2017
