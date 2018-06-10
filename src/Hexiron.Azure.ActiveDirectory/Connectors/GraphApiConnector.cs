@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Hexiron.Azure.ActiveDirectory.Connectors.Interfaces;
@@ -16,6 +18,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
 
         public GraphApiConnector(IAzureAdSecuredApiConnector azureAdSecuredApiConnector, IOptions<AzureAdSettings> options)
         {
+            ValidateOptions(options);
             _azureAdSecuredApiConnector = azureAdSecuredApiConnector;
             _graphApiUrl = $"https://graph.windows.net/{options.Value.Tenant}";
             _version = "api-version=1.6";
@@ -29,6 +32,24 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
             var groups = await _azureAdSecuredApiConnector.Post(url, request, RESOURCE)
                                  .ReceiveJson<GroupMembershipResponse>();
             return groups.Values;
+        }
+
+        private void ValidateOptions(IOptions<AzureAdSettings> options)
+        {
+            var validationErrors = new Dictionary<string, string>();
+            if (string.IsNullOrEmpty(options?.Value?.Tenant))
+            {
+                validationErrors.Add("Tenant", "AzureAD authority is not specified in the settings");
+            }
+            if (validationErrors.Any())
+            {
+                var errormessage = "";
+                foreach (var validationError in validationErrors)
+                {
+                    errormessage += $"{validationError.Key}, ";
+                }
+                throw new ArgumentNullException("The following azureAdSettings are empty: " + errormessage);
+            }
         }
     }
 }

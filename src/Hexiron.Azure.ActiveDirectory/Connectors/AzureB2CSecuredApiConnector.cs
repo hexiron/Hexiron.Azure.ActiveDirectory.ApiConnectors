@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -22,6 +23,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
         public AzureB2CSecuredApiConnector(IOptions<AzureB2CSettings> options, IHttpContextAccessor httpContextAccessor)
         {
             _azureB2CSettings = options.Value;
+            ValidateOptions(options);
             _requiredScopes = _azureB2CSettings.ApiScopes.Split(' ').ToList();
             var signedInUserId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userTokenCache = new MsalSessionCache(signedInUserId, httpContextAccessor.HttpContext).GetMsalCacheInstance();
@@ -63,6 +65,36 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
         private async Task<AuthenticationResult> GetToken()
         {
             return await _confidentialClientApplication.AcquireTokenSilentAsync(_requiredScopes, _confidentialClientApplication.Users.FirstOrDefault(), _azureB2CSettings.Authority, false);
+        }
+
+        private void ValidateOptions(IOptions<AzureB2CSettings> options)
+        {
+            var validationErrors = new Dictionary<string, string>();
+            if (string.IsNullOrEmpty(options?.Value?.Authority))
+            {
+                validationErrors.Add("Authority", "AzureAD authority is not specified in the settings");
+            }
+            if (string.IsNullOrEmpty(options?.Value?.ClientId))
+            {
+                validationErrors.Add("ClientId", "AzureAD clientId is not specified in the settings");
+            }
+            if (string.IsNullOrEmpty(options?.Value?.ClientId))
+            {
+                validationErrors.Add("ClientSecret", "AzureAD clientSecret is not specified in the settings");
+            }
+            if (string.IsNullOrEmpty(options?.Value?.RedirectUri))
+            {
+                validationErrors.Add("ClientSecret", "AzureAD redirectURI is not specified in the settings");
+            }
+            if (validationErrors.Any())
+            {
+                var errormessage = "";
+                foreach (var validationError in validationErrors)
+                {
+                    errormessage += $"{validationError.Key}, ";
+                }
+                throw new ArgumentNullException("The following azureB2CSettings are empty: " + errormessage);
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,6 +19,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
         private readonly Dictionary<string, string> _defaultHeaders;
         public AzureAdSecuredApiConnector(IOptions<AzureAdSettings> options)
         {
+            ValidateOptions(options);
             _authenticationContext = new AuthenticationContext(options.Value.Authority);
             _clientCredential = new ClientCredential(options.Value.ClientId, options.Value.ClientSecret);
             _defaultHeaders = new Dictionary<string, string>();
@@ -76,6 +79,32 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
             foreach (var header in defaultHeaders)
             {
                 _defaultHeaders.Add(header.Key, header.Value);
+            }
+        }
+
+        private void ValidateOptions(IOptions<AzureAdSettings> options)
+        {
+            var validationErrors = new Dictionary<string, string>();
+            if (string.IsNullOrEmpty(options?.Value?.Authority))
+            {
+                validationErrors.Add("Authority", "AzureAD authority is not specified in the settings");
+            }
+            if (string.IsNullOrEmpty(options?.Value?.ClientId))
+            {
+                validationErrors.Add("ClientId", "AzureAD clientId is not specified in the settings");
+            }
+            if (string.IsNullOrEmpty(options?.Value?.ClientId))
+            {
+                validationErrors.Add("ClientSecret", "AzureAD clientSecret is not specified in the settings");
+            }
+            if (validationErrors.Any())
+            {
+                var errormessage = "";
+                foreach (var validationError in validationErrors)
+                {
+                    errormessage += $"{validationError.Key}, ";
+                }
+                throw new ArgumentNullException("The following azureAdSettings are empty: " + errormessage);
             }
         }
     }
