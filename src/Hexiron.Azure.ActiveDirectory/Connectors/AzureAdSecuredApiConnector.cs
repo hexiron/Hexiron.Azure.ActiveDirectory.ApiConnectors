@@ -15,10 +15,10 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
         private readonly AuthenticationContext _authenticationContext;
         private readonly ClientCredential _clientCredential;
         private readonly Dictionary<string, string> _defaultHeaders;
-        public AzureAdSecuredApiConnector(IOptions<AzureAuthenticationSettings> options)
+        public AzureAdSecuredApiConnector(IOptions<AzureAdSettings> options)
         {
-            _authenticationContext = new AuthenticationContext(options.Value.AzureAdSettings.Authority);
-            _clientCredential = new ClientCredential(options.Value.AzureAdSettings.ClientId, options.Value.AzureAdSettings.ClientSecret);
+            _authenticationContext = new AuthenticationContext(options.Value.Authority);
+            _clientCredential = new ClientCredential(options.Value.ClientId, options.Value.ClientSecret);
             _defaultHeaders = new Dictionary<string, string>();
         }
 

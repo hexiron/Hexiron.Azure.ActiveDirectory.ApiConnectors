@@ -12,5 +12,6 @@
         public string ClientId { get; set; }
         public string Tenant { get; set; }
         public string Authority => $"{_azureAdInstance}/{Tenant}";
+        public bool Enabled { get; set; }
     }
 }

@@ -19,10 +19,10 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
         private readonly ConfidentialClientApplication _confidentialClientApplication;
         private readonly AzureB2CSettings _azureB2CSettings;
 
-        public AzureB2CSecuredApiConnector(IOptions<AzureAuthenticationSettings> options, IHttpContextAccessor httpContextAccessor)
+        public AzureB2CSecuredApiConnector(IOptions<AzureB2CSettings> options, IHttpContextAccessor httpContextAccessor)
         {
-            _requiredScopes = options.Value.AzureB2CSettings.ApiScopes.Split(' ').ToList();
-            _azureB2CSettings = options.Value.AzureB2CSettings;
+            _azureB2CSettings = options.Value;
+            _requiredScopes = _azureB2CSettings.ApiScopes.Split(' ').ToList();
             var signedInUserId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userTokenCache = new MsalSessionCache(signedInUserId, httpContextAccessor.HttpContext).GetMsalCacheInstance();
             _confidentialClientApplication = new ConfidentialClientApplication(_azureB2CSettings.ClientId, _azureB2CSettings.Authority, _azureB2CSettings.RedirectUri, new ClientCredential(_azureB2CSettings.ClientSecret), userTokenCache, null);

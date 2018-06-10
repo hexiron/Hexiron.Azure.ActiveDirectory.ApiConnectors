@@ -14,10 +14,10 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
         private readonly string _version;
         private const string RESOURCE = "https://graph.windows.net";
 
-        public GraphApiConnector(IAzureAdSecuredApiConnector azureAdSecuredApiConnector, IOptions<AzureAuthenticationSettings> options)
+        public GraphApiConnector(IAzureAdSecuredApiConnector azureAdSecuredApiConnector, IOptions<AzureAdSettings> options)
         {
             _azureAdSecuredApiConnector = azureAdSecuredApiConnector;
-            _graphApiUrl = $"https://graph.windows.net/{options.Value.AzureAdSettings.Tenant}";
+            _graphApiUrl = $"https://graph.windows.net/{options.Value.Tenant}";
             _version = "api-version=1.6";
         }
 

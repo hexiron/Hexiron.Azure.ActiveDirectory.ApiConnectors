@@ -9,6 +9,8 @@
         {
             _azureB2CInstance = "https://login.microsoftonline.com/tfp";
         }
+        public bool Enabled { get; set; }
+
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
 
