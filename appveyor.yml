@@ -3,7 +3,7 @@
 #---------------------------------#
 
 # version format
-version: {version}
+version: '{version}'
 
 #---------------------------------#
 #    environment configuration    #
