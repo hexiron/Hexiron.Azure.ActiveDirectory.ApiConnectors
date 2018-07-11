@@ -10,18 +10,18 @@ namespace Hexiron.Azure.ActiveDirectory.Sample.Controllers
     public class ExampleController : Controller
     {
         private readonly IAzureAdSecuredApiConnector _azureAdSecuredApiConnector;
-        private readonly AzureAdSettings _azureAdSettings;
+        private readonly AzureAd _azureAd;
 
-        public ExampleController(IAzureAdSecuredApiConnector azureAdSecuredApiConnector, IOptions<AzureAdSettings> azureSettingsAccessor)
+        public ExampleController(IAzureAdSecuredApiConnector azureAdSecuredApiConnector, IOptions<AzureAd> azureSettingsAccessor)
         {
             _azureAdSecuredApiConnector = azureAdSecuredApiConnector;
-            _azureAdSettings = azureSettingsAccessor.Value;
+            _azureAd = azureSettingsAccessor.Value;
         }
 
         public async Task<ExampleDto> Index()
         {
             _azureAdSecuredApiConnector.AddDefaultHeader("custom-key","value");
-            var clientId = _azureAdSettings.ClientId;
+            var clientId = _azureAd.ClientId;
             return await _azureAdSecuredApiConnector.Get<ExampleDto>("http://localhost", "azureResourceId");
         }
     }

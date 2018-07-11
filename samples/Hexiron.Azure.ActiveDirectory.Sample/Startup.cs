@@ -21,13 +21,13 @@ namespace Hexiron.Azure.ActiveDirectory.Sample
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IAzureAdSecuredApiConnector, AzureAdSecuredApiConnector>();
-            services.AddTransient<IAzureB2CSecuredApiConnector, AzureB2CSecuredApiConnector>();
+            services.AddTransient<IAzureAdB2CSecuredApiConnector, AzureAdB2CSecuredApiConnector>();
             services.AddTransient<IGraphApiConnector, GraphApiConnector>();
 
             // register Azure AD Settings to be able to use the IOptions pattern via DI
-            services.Configure<AzureAdSettings>(_configuration.GetSection("AzureAdSettings"));
+            services.Configure<AzureAd>(_configuration.GetSection("Authentication:AzureAd"));
             // register Azure B2C Settings to be able to use the IOptions pattern via DI
-            services.Configure<AzureB2CSettings>(_configuration.GetSection("AzureB2CSettings"));
+            services.Configure<AzureAdB2C>(_configuration.GetSection("Authentication:AzureAdB2C"));
 
             services.AddMvc();
         }

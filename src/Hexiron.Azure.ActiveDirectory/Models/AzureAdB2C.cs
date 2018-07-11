@@ -1,13 +1,13 @@
 ﻿namespace Hexiron.Azure.ActiveDirectory.Models
 {
-    public class AzureB2CSettings
+    public class AzureAdB2C
     {
         //public const string POLICY_AUTHENTICATION_PROPERTY = "Policy";
-        private readonly string _azureB2CInstance;
+        private readonly string _azureAdB2CInstance;
 
-        public AzureB2CSettings()
+        public AzureAdB2C()
         {
-            _azureB2CInstance = "https://login.microsoftonline.com/tfp";
+            _azureAdB2CInstance = "https://login.microsoftonline.com/tfp";
         }
         public bool Enabled { get; set; }
 
@@ -23,7 +23,7 @@
 
         public string RedirectUri { get; set; }
         public string Authority => $"{Domain}/{SignUpSignInPolicyId}/v2.0";
-        public string Domain => $"{_azureB2CInstance}/{Tenant}";
+        public string Domain => $"{_azureAdB2CInstance}/{Tenant}";
         public string ScopePrefix { get; set; }
 
         // a space seperated list of necessary scopes for accessing the api 

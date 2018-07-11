@@ -14,20 +14,20 @@ using Microsoft.Identity.Client;
 
 namespace Hexiron.Azure.ActiveDirectory.Connectors
 {
-    public class AzureB2CSecuredApiConnector : IAzureB2CSecuredApiConnector
+    public class AzureAdB2CSecuredApiConnector : IAzureAdB2CSecuredApiConnector
     {
         private readonly List<string> _requiredScopes;
         private readonly ConfidentialClientApplication _confidentialClientApplication;
-        private readonly AzureB2CSettings _azureB2CSettings;
+        private readonly AzureAdB2C _azureAdB2C;
 
-        public AzureB2CSecuredApiConnector(IOptions<AzureB2CSettings> options, IHttpContextAccessor httpContextAccessor)
+        public AzureAdB2CSecuredApiConnector(IOptions<AzureAdB2C> options, IHttpContextAccessor httpContextAccessor)
         {
-            _azureB2CSettings = options.Value;
+            _azureAdB2C = options.Value;
             ValidateOptions(options);
-            _requiredScopes = _azureB2CSettings.ApiScopes.Split(' ').ToList();
+            _requiredScopes = _azureAdB2C.ApiScopes.Split(' ').ToList();
             var signedInUserId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userTokenCache = new MsalSessionCache(signedInUserId, httpContextAccessor.HttpContext).GetMsalCacheInstance();
-            _confidentialClientApplication = new ConfidentialClientApplication(_azureB2CSettings.ClientId, _azureB2CSettings.Authority, _azureB2CSettings.RedirectUri, new ClientCredential(_azureB2CSettings.ClientSecret), userTokenCache, null);
+            _confidentialClientApplication = new ConfidentialClientApplication(_azureAdB2C.ClientId, _azureAdB2C.Authority, _azureAdB2C.RedirectUri, new ClientCredential(_azureAdB2C.ClientSecret), userTokenCache, null);
         }
         public async Task<HttpResponseMessage> Post(string url, object objectToBePosted)
         {
@@ -64,10 +64,10 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
 
         private async Task<AuthenticationResult> GetToken()
         {
-            return await _confidentialClientApplication.AcquireTokenSilentAsync(_requiredScopes, _confidentialClientApplication.Users.FirstOrDefault(), _azureB2CSettings.Authority, false);
+            return await _confidentialClientApplication.AcquireTokenSilentAsync(_requiredScopes, _confidentialClientApplication.Users.FirstOrDefault(), _azureAdB2C.Authority, false);
         }
 
-        private void ValidateOptions(IOptions<AzureB2CSettings> options)
+        private void ValidateOptions(IOptions<AzureAdB2C> options)
         {
             var validationErrors = new Dictionary<string, string>();
             if (string.IsNullOrEmpty(options?.Value?.Authority))
@@ -93,7 +93,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
                 {
                     errormessage += $"{validationError.Key}, ";
                 }
-                throw new ArgumentNullException("The following azureB2CSettings are empty: " + errormessage);
+                throw new ArgumentNullException("The following AzureAdB2CSettings are empty: " + errormessage);
             }
         }
     }

@@ -36,24 +36,28 @@ See example below:
 
 ```json
 {
-  "AzureAdSettings": {
-	"Enabled": true,
-    "Tenant": "tentantname.onmicrosoft.com",
-    "ClientId": "aaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa",
-	"ClientSecret": "fc54rg4d5gx4s5fg5dswrg"
-  },
-  "AzureB2CSettings": {
-	"Enabled": true,
-    "ClientId": "aaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa",
-    "Tenant": "tentantname.onmicrosoft.com",
-    "SignUpSignInPolicyId": "defined_Policy_from_Azure",
-    "ResetPasswordPolicyId": "defined_Policy_from_Azure",
-    "EditProfilePolicyId": "defined_Policy_from_Azure",
-    "RedirectUri": "https://.../signin-oidc",
-    "ClientSecret": "secret",
-	"ScopePrefix": "https://myb2c.onmicrosoft.com/my-api/",
-    "ApiScopes": "read:companies write:companies" 
+  "Authentication":
+  {
+	"AzureAd": {
+		"Enabled": true,
+		"Tenant": "tentantname.onmicrosoft.com",
+		"ClientId": "aaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa",
+		"ClientSecret": "fc54rg4d5gx4s5fg5dswrg"
+		},
+	"AzureAdB2C": {
+		"Enabled": true,
+		"ClientId": "aaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaa",
+		"Tenant": "tentantname.onmicrosoft.com",
+		"SignUpSignInPolicyId": "defined_Policy_from_Azure",
+		"ResetPasswordPolicyId": "defined_Policy_from_Azure",
+		"EditProfilePolicyId": "defined_Policy_from_Azure",
+		"RedirectUri": "https://.../signin-oidc",
+		"ClientSecret": "secret",
+		"ScopePrefix": "https://myb2c.onmicrosoft.com/my-api/",
+		"ApiScopes": "read:companies write:companies" 
+	}
   }
+  
 }
 ```
 
@@ -70,16 +74,17 @@ See example below:
         //....
 
         // register Azure AD Settings to be able to use the IOptions pattern via DI
-        services.Configure<AzureAdSettings>(_configuration.GetSection("AzureAdSettings"));
+        services.Configure<AzureAd>(_configuration.GetSection("Authentication:AzureAd"));
         // register Azure B2C Settings to be able to use the IOptions pattern via DI
-        services.Configure<AzureB2CSettings>(_configuration.GetSection("AzureB2CSettings"));
+        services.Configure<AzureAdB2C>(_configuration.GetSection("Authentication:AzureAdB2C"));
 
 		//....
     }
 ```
 
 ### 4. Register the connectors you want to use via Dependency injenction
-In the startup.cs class, register also the AzureConfiguration and the connectors you need:
+In the startup.cs class, register also the AzureConfiguration and the connectors you need.  
+If you want to register the GraphApiConnector, you also need to register the IAzureAdSecuredApiConnector as the GraphApiConnector uses this via constructor injection.
   
 ```csharp  
 public void ConfigureServices(IServiceCollection services)  
@@ -87,7 +92,7 @@ public void ConfigureServices(IServiceCollection services)
         //... 
 		
 		services.AddTransient<IAzureAdSecuredApiConnector, AzureAdSecuredApiConnector>();
-        services.AddTransient<IAzureB2CSecuredApiConnector, AzureB2CSecuredApiConnector>();
+        services.AddTransient<IAzureAdB2CSecuredApiConnector, AzureAdB2CSecuredApiConnector>();
         services.AddTransient<IGraphApiConnector, GraphApiConnector>();
 
 		//...  
@@ -100,16 +105,16 @@ In the example below we access the connectors immediately in the controllers, bu
 ```csharp  
 public class ExampleController : Controller
 {
-    private readonly IAzureB2CSecuredApiConnector _azureB2CSecuredApiConnector;
+    private readonly IAzureAdB2CSecuredApiConnector _AzureAdB2CSecuredApiConnector;
 
-    public ExampleController(IAzureB2CSecuredApiConnector azureB2CSecuredApiConnector)
+    public ExampleController(IAzureAdB2CSecuredApiConnector AzureAdB2CSecuredApiConnector)
     {
-        _azureB2CSecuredApiConnector = azureAdSecuredApiConnector;
+        _AzureAdB2CSecuredApiConnector = azureAdSecuredApiConnector;
     }
 
     public async Task<ExampleDto> Index()
     {
-        return await _azureB2CSecuredApiConnector.Get<ExampleDto>("http://localhost", "azureResourceId");
+        return await _AzureAdB2CSecuredApiConnector.Get<ExampleDto>("http://localhost", "azureResourceId");
     }
 }
 ```

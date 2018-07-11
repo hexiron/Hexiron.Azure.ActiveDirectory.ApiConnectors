@@ -16,7 +16,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
         private readonly string _version;
         private const string RESOURCE = "https://graph.windows.net";
 
-        public GraphApiConnector(IAzureAdSecuredApiConnector azureAdSecuredApiConnector, IOptions<AzureAdSettings> options)
+        public GraphApiConnector(IAzureAdSecuredApiConnector azureAdSecuredApiConnector, IOptions<AzureAd> options)
         {
             ValidateOptions(options);
             _azureAdSecuredApiConnector = azureAdSecuredApiConnector;
@@ -34,7 +34,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
             return groups.Values;
         }
 
-        private void ValidateOptions(IOptions<AzureAdSettings> options)
+        private void ValidateOptions(IOptions<AzureAd> options)
         {
             var validationErrors = new Dictionary<string, string>();
             if (string.IsNullOrEmpty(options?.Value?.Tenant))

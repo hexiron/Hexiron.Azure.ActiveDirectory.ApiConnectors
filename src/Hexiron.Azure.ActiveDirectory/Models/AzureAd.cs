@@ -1,10 +1,10 @@
 ﻿namespace Hexiron.Azure.ActiveDirectory.Models
 {
-    public class AzureAdSettings
+    public class AzureAd
     {
         private readonly string _azureAdInstance;
 
-        public AzureAdSettings()
+        public AzureAd()
         {
             _azureAdInstance = "https://login.microsoftonline.com";
         }

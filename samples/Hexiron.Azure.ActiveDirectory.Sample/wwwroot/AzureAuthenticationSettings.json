@@ -5,7 +5,7 @@
     "ClientId": "d00b610c-389f-4a05-97cc-f9a934488c8b",
     "ClientSecret": "fc54rg4d5gx4s5fg5dswrg"
   },
-  "AzureB2CSettings": {
+  "AzureAdB2CSettings": {
     "ClientId": "826f51e5-14f9-4a69-a1e3-4ae80e2aaf0e",
     "Tenant": "b2c.onmicrosoft.com",
     "SignUpSignInPolicyId": "B2C_1_signin",
