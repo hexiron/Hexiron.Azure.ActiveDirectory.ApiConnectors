@@ -9,9 +9,12 @@ When accessing an API through one of these connecters, it gets in background an 
 The connectors make use of the .NetCore IOptions pattern so make sure you register them in the startup class. More info see below.
 
 **Features**  
-- An Azure AD enabled API connector to access API's secured by Azure AD with caching of the JWT included by using ADAL
-- An Azure AD B2C enabled API connector to access API's secured by Azure AD B2C with caching of the JWT included by using MSAL
-- An Azure Graph API connector to access easily the Azure Graph API to retrieve Azure AD information with caching of the JWT included
+- An **Azure AD enabled API connector** to access API's secured by Azure AD with caching of the JWT included by using ADAL  
+- An **Azure AD B2C enabled API connector** to access API's secured by Azure AD B2C with caching of the JWT included by using MSAL  
+- An **Azure Graph API connector** to access easily the Azure Graph API to retrieve Azure AD information with caching of the JWT included (implicitly using ADAL)  
+
+**Azure Graph API Connector features**  
+- GetMemberGroups : get all groups for the specified userid
 
 ### 1. Create a new ASP.NET Core project ###
 In Visual Studio 2017.
@@ -35,6 +38,7 @@ You have multiple possibilities to load the settings in the startup class so the
 See example below:
 
 ```json
+
 {
   "Authentication":
   {
@@ -62,6 +66,7 @@ See example below:
 ```
 
 ```csharp  
+
 	private readonly IConfiguration _configuration;
 
     public Startup(IConfiguration configuration)
@@ -72,12 +77,10 @@ See example below:
     public void ConfigureServices(IServiceCollection services)
     {
         //....
-
         // register Azure AD Settings to be able to use the IOptions pattern via DI
         services.Configure<AzureAd>(_configuration.GetSection("Authentication:AzureAd"));
         // register Azure B2C Settings to be able to use the IOptions pattern via DI
         services.Configure<AzureAdB2C>(_configuration.GetSection("Authentication:AzureAdB2C"));
-
 		//....
     }
 ```
@@ -87,14 +90,13 @@ In the startup.cs class, register also the AzureConfiguration and the connectors
 If you want to register the GraphApiConnector, you also need to register the IAzureAdSecuredApiConnector as the GraphApiConnector uses this via constructor injection.
   
 ```csharp  
-public void ConfigureServices(IServiceCollection services)  
+
+	public void ConfigureServices(IServiceCollection services)  
     {  
         //... 
-		
 		services.AddTransient<IAzureAdSecuredApiConnector, AzureAdSecuredApiConnector>();
         services.AddTransient<IAzureAdB2CSecuredApiConnector, AzureAdB2CSecuredApiConnector>();
         services.AddTransient<IGraphApiConnector, GraphApiConnector>();
-
 		//...  
     }  
 ```
@@ -102,19 +104,20 @@ public void ConfigureServices(IServiceCollection services)
 ### 5. Use the Connectors via Dependency Injection
 In the example below we access the connectors immediately in the controllers, but it is recommended to add a mediator in a real application to abstract controllers from any business logic
 
-```csharp  
-public class ExampleController : Controller
-{
-    private readonly IAzureAdB2CSecuredApiConnector _AzureAdB2CSecuredApiConnector;
+```csharp
+  
+	public class ExampleController : Controller
+	{
+    	private readonly IAzureAdB2CSecuredApiConnector _AzureAdB2CSecuredApiConnector;
 
-    public ExampleController(IAzureAdB2CSecuredApiConnector AzureAdB2CSecuredApiConnector)
-    {
-        _AzureAdB2CSecuredApiConnector = azureAdSecuredApiConnector;
-    }
+	    public ExampleController(IAzureAdB2CSecuredApiConnector AzureAdB2CSecuredApiConnector)
+    	{
+    	    _AzureAdB2CSecuredApiConnector = AzureAdB2CSecuredApiConnector;
+    	}
 
-    public async Task<ExampleDto> Index()
-    {
-        return await _AzureAdB2CSecuredApiConnector.Get<ExampleDto>("http://localhost", "azureResourceId");
-    }
-}
+    	public async Task<ExampleDto> Index()
+    	{
+    	    return await _AzureAdB2CSecuredApiConnector.Get<ExampleDto>("http://localhost", "azureResourceId");
+    	}
+	}
 ```
