@@ -4,27 +4,27 @@
 
 
 Hexiron.Azure.ActiveDirectory has easy to use Azure connectors to connect with Azure AD secured API's using OAuth2 flows.
-When accessing an API through one of these connecters, it gets in background an access token from the Microsoft identity provider using ADAL for Azure AD and MSAL for Azure B2C and adds it to the request.
+When accessing an API through one of these connecters, it gets in background an access token from the Microsoft identity provider using ADAL for Azure AD and MSAL for Azure B2C and adds it automatically in background to the request.
+
+You don't need to worry about getting and storing an access token. This library does it for you.
 
 The connectors make use of the .NetCore IOptions pattern so make sure you register them in the startup class. More info see below.
 
-**Features**  
+## Features ##
 - An **Azure AD enabled API connector** to access API's secured by Azure AD with caching of the JWT included by using ADAL  
 - An **Azure AD B2C enabled API connector** to access API's secured by Azure AD B2C with caching of the JWT included by using MSAL  
 - An **Azure Graph API connector** to access easily the Azure Graph API to retrieve Azure AD information with caching of the JWT included (implicitly using ADAL)  
 
-**Azure Graph API Connector features**  
+### Azure Graph API Connector features 
 - GetMemberGroups : get all groups for the specified userid
 
+## How to use:
 ### 1. Create a new ASP.NET Core project ###
 In Visual Studio 2017.
 ### 2. Add dependency in csproj manually or using NuGet ###
-Install the latest nuget package:
-
-- Hexiron.Azure.ActiveDirectory
+Install the latest nuget package of "Hexiron.Azure.ActiveDirectory"
 
 in csproj:
-
 ```xml
 <PackageReference Include="Hexiron.Azure.ActiveDirectory" Version="x.x.x" />
 ```
@@ -33,15 +33,12 @@ in csproj:
 
 You have multiple possibilities to load the settings in the startup class so they can be used by the IOptions pattern in the connectors.  
 - Add the settings in you appsettings.json file (and corresponding environment files)
-- Add the settings in the Azure web application settings online. Recomended for the secrets, so they are not exposed in source code
+- Add the settings in the web applications settings in Azure. This is recommended for secrets, so they are not exposed in source code
 
 See example below:
-
 ```json
-
 {
-  "Authentication":
-  {
+  "Authentication":{
 	"AzureAd": {
 		"Enabled": true,
 		"Tenant": "tentantname.onmicrosoft.com",
@@ -61,63 +58,58 @@ See example below:
 		"ApiScopes": "read:companies write:companies" 
 	}
   }
-  
+}
+```
+Register the configuration settings to be able to use the IOptions pattern and dependency injection
+
+```csharp  
+private readonly IConfiguration _configuration;
+
+public Startup(IConfiguration configuration)
+{
+    _configuration = configuration;
+}
+
+public void ConfigureServices(IServiceCollection services)
+{
+    //....
+    // register Azure AD Settings to be able to use the IOptions pattern via DI
+    services.Configure<AzureAd>(_configuration.GetSection("Authentication:AzureAd"));
+    // register Azure B2C Settings to be able to use the IOptions pattern via DI
+    services.Configure<AzureAdB2C>(_configuration.GetSection("Authentication:AzureAdB2C"));
+	//....
 }
 ```
 
-```csharp  
-
-	private readonly IConfiguration _configuration;
-
-    public Startup(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
-    public void ConfigureServices(IServiceCollection services)
-    {
-        //....
-        // register Azure AD Settings to be able to use the IOptions pattern via DI
-        services.Configure<AzureAd>(_configuration.GetSection("Authentication:AzureAd"));
-        // register Azure B2C Settings to be able to use the IOptions pattern via DI
-        services.Configure<AzureAdB2C>(_configuration.GetSection("Authentication:AzureAdB2C"));
-		//....
-    }
-```
-
 ### 4. Register the connectors you want to use via Dependency injenction
-In the startup.cs class, register also the AzureConfiguration and the connectors you need.  
+In the startup.cs class, register the connectors you need.  
 If you want to register the GraphApiConnector, you also need to register the IAzureAdSecuredApiConnector as the GraphApiConnector uses this via constructor injection.
   
 ```csharp  
-
-	public void ConfigureServices(IServiceCollection services)  
-    {  
-        //... 
-		services.AddTransient<IAzureAdSecuredApiConnector, AzureAdSecuredApiConnector>();
-        services.AddTransient<IAzureAdB2CSecuredApiConnector, AzureAdB2CSecuredApiConnector>();
-        services.AddTransient<IGraphApiConnector, GraphApiConnector>();
-		//...  
-    }  
+public void ConfigureServices(IServiceCollection services)  
+{  
+    //... 
+	services.AddTransient<IAzureAdSecuredApiConnector, AzureAdSecuredApiConnector>();
+    services.AddTransient<IAzureAdB2CSecuredApiConnector, AzureAdB2CSecuredApiConnector>();
+    services.AddTransient<IGraphApiConnector, GraphApiConnector>();
+	//...  
+}  
 ```
 
 ### 5. Use the Connectors via Dependency Injection
 In the example below we access the connectors immediately in the controllers, but it is recommended to add a mediator in a real application to abstract controllers from any business logic
 
 ```csharp
-  
-	public class ExampleController : Controller
+public class ExampleController : Controller
+{
+	private readonly IAzureAdB2CSecuredApiConnector _AzureAdB2CSecuredApiConnector;
+    public ExampleController(IAzureAdB2CSecuredApiConnector azureAdB2CSecuredApiConnector)
 	{
-    	private readonly IAzureAdB2CSecuredApiConnector _AzureAdB2CSecuredApiConnector;
-
-	    public ExampleController(IAzureAdB2CSecuredApiConnector AzureAdB2CSecuredApiConnector)
-    	{
-    	    _AzureAdB2CSecuredApiConnector = AzureAdB2CSecuredApiConnector;
-    	}
-
-    	public async Task<ExampleDto> Index()
-    	{
-    	    return await _AzureAdB2CSecuredApiConnector.Get<ExampleDto>("http://localhost", "azureResourceId");
-    	}
+	    _AzureAdB2CSecuredApiConnector = azureAdB2CSecuredApiConnector;
 	}
+	public async Task<ExampleDto> Index()
+	{
+	    return await _AzureAdB2CSecuredApiConnector.Get<ExampleDto>("http://localhost", "azureResourceId");
+	}
+}
 ```
