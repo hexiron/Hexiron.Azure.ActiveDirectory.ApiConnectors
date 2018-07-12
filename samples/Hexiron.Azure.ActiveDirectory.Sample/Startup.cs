@@ -25,9 +25,9 @@ namespace Hexiron.Azure.ActiveDirectory.Sample
             services.AddTransient<IGraphApiConnector, GraphApiConnector>();
 
             // register Azure AD Settings to be able to use the IOptions pattern via DI
-            services.Configure<AzureAd>(_configuration.GetSection("Authentication:AzureAd"));
+            services.Configure<AzureAdOptions>(_configuration.GetSection("Authentication:AzureAd"));
             // register Azure B2C Settings to be able to use the IOptions pattern via DI
-            services.Configure<AzureAdB2C>(_configuration.GetSection("Authentication:AzureAdB2C"));
+            services.Configure<AzureAdB2COptions>(_configuration.GetSection("Authentication:AzureAdB2C"));
 
             services.AddMvc();
         }

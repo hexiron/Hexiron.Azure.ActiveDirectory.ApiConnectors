@@ -18,16 +18,16 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
     {
         private readonly List<string> _requiredScopes;
         private readonly ConfidentialClientApplication _confidentialClientApplication;
-        private readonly AzureAdB2C _azureAdB2C;
+        private readonly AzureAdB2COptions _azureAdB2COptions;
 
-        public AzureAdB2CSecuredApiConnector(IOptions<AzureAdB2C> options, IHttpContextAccessor httpContextAccessor)
+        public AzureAdB2CSecuredApiConnector(IOptions<AzureAdB2COptions> options, IHttpContextAccessor httpContextAccessor)
         {
-            _azureAdB2C = options.Value;
+            _azureAdB2COptions = options.Value;
             ValidateOptions(options);
-            _requiredScopes = _azureAdB2C.ApiScopes.Split(' ').ToList();
+            _requiredScopes = _azureAdB2COptions.ApiScopes.Split(' ').ToList();
             var signedInUserId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userTokenCache = new MsalSessionCache(signedInUserId, httpContextAccessor.HttpContext).GetMsalCacheInstance();
-            _confidentialClientApplication = new ConfidentialClientApplication(_azureAdB2C.ClientId, _azureAdB2C.Authority, _azureAdB2C.RedirectUri, new ClientCredential(_azureAdB2C.ClientSecret), userTokenCache, null);
+            _confidentialClientApplication = new ConfidentialClientApplication(_azureAdB2COptions.ClientId, _azureAdB2COptions.Authority, _azureAdB2COptions.RedirectUri, new ClientCredential(_azureAdB2COptions.ClientSecret), userTokenCache, null);
         }
         public async Task<HttpResponseMessage> Post(string url, object objectToBePosted)
         {
@@ -64,10 +64,10 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
 
         private async Task<AuthenticationResult> GetToken()
         {
-            return await _confidentialClientApplication.AcquireTokenSilentAsync(_requiredScopes, _confidentialClientApplication.Users.FirstOrDefault(), _azureAdB2C.Authority, false);
+            return await _confidentialClientApplication.AcquireTokenSilentAsync(_requiredScopes, _confidentialClientApplication.Users.FirstOrDefault(), _azureAdB2COptions.Authority, false);
         }
 
-        private void ValidateOptions(IOptions<AzureAdB2C> options)
+        private void ValidateOptions(IOptions<AzureAdB2COptions> options)
         {
             var validationErrors = new Dictionary<string, string>();
             if (string.IsNullOrEmpty(options?.Value?.Authority))

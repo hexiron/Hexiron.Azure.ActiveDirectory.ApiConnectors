@@ -17,7 +17,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
         private readonly AuthenticationContext _authenticationContext;
         private readonly ClientCredential _clientCredential;
         private readonly Dictionary<string, string> _defaultHeaders;
-        public AzureAdSecuredApiConnector(IOptions<AzureAd> options)
+        public AzureAdSecuredApiConnector(IOptions<AzureAdOptions> options)
         {
             ValidateOptions(options);
             _authenticationContext = new AuthenticationContext(options.Value.Authority);
@@ -82,7 +82,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
             }
         }
 
-        private void ValidateOptions(IOptions<AzureAd> options)
+        private void ValidateOptions(IOptions<AzureAdOptions> options)
         {
             var validationErrors = new Dictionary<string, string>();
             if (string.IsNullOrEmpty(options?.Value?.Authority))
