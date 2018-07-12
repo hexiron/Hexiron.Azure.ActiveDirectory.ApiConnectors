@@ -1,11 +1,11 @@
 ﻿namespace Hexiron.Azure.ActiveDirectory.Models
 {
-    public class AzureAdB2C
+    public class AzureAdB2COptions
     {
         //public const string POLICY_AUTHENTICATION_PROPERTY = "Policy";
         private readonly string _azureAdB2CInstance;
 
-        public AzureAdB2C()
+        public AzureAdB2COptions()
         {
             _azureAdB2CInstance = "https://login.microsoftonline.com/tfp";
         }
