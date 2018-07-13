@@ -33,6 +33,14 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
                     .PostJsonAsync(objectToBePosted);
         }
 
+        public async Task<HttpResponseMessage> Patch(string url, object objectToBePosted, string azureResourceId)
+        {
+            var token = await _authenticationContext.AcquireTokenAsync(azureResourceId, _clientCredential);
+            return await url.WithOAuthBearerToken(token.AccessToken)
+                .WithHeaders(_defaultHeaders)
+                .PatchJsonAsync(objectToBePosted);
+        }
+
         public async Task<T> Put<T>(string url, object objectToBePosted, string azureResourceId, int requestTimeoutInSec = 60)
         {
             var token = await _authenticationContext.AcquireTokenAsync(azureResourceId, _clientCredential);
@@ -64,6 +72,9 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
                 throw ex;
             }
         }
+
+
+
         public async Task<HttpResponseMessage> Delete(string url, string azureResourceId)
         {
             var token = await _authenticationContext.AcquireTokenAsync(azureResourceId, _clientCredential);
