@@ -18,8 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{2B59
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hexiron.Azure.ActiveDirectory.Sample", "samples\Hexiron.Azure.ActiveDirectory.Sample\Hexiron.Azure.ActiveDirectory.Sample.csproj", "{32C5C94F-54F9-40CE-A31D-12775AE2009C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{8DC9A100-09B9-40B8-8CA7-6AA38C6A089E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
