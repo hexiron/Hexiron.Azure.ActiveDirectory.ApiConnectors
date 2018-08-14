@@ -41,6 +41,10 @@ namespace Hexiron.Azure.ActiveDirectory.Models
                 {
                     if (!string.IsNullOrEmpty(ScopePrefix))
                     {
+                        if (ScopePrefix.EndsWith("/"))
+                        {
+                            ScopePrefix = ScopePrefix.Remove(ScopePrefix.Length - 1, 1);
+                        }
                         foreach (var scope in Scopes)
                         {
                             if (scope.ToLower().StartsWith("http"))
@@ -49,6 +53,7 @@ namespace Hexiron.Azure.ActiveDirectory.Models
                             }
                             else
                             {
+
                                 scopeList.Add($"{ScopePrefix}/{scope}");
                             }
                         }
