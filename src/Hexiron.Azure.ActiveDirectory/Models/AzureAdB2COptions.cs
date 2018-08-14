@@ -43,7 +43,7 @@ namespace Hexiron.Azure.ActiveDirectory.Models
                     {
                         foreach (var scope in Scopes)
                         {
-                            if (!scope.ToLower().StartsWith("http"))
+                            if (scope.ToLower().StartsWith("http"))
                             {
                                 scopeList.Add(scope);
                             }
