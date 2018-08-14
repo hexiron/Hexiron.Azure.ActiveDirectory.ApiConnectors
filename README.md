@@ -60,7 +60,7 @@ See example below:
   }
 }
 ```
-Register the configuration settings to be able to use the IOptions pattern and dependency injection
+Register the configuration settings to be able to use the IOptions pattern and dependency injection.
 
 ```csharp  
 private readonly IConfiguration _configuration;
@@ -83,14 +83,18 @@ public void ConfigureServices(IServiceCollection services)
 
 ### 4. Register the connectors you want to use via Dependency injenction
 In the startup.cs class, register the connectors you need.  
-If you want to register the GraphApiConnector, you also need to register the IAzureAdSecuredApiConnector as the GraphApiConnector uses this via constructor injection.
-  
+If you want to register the GraphApiConnector, you also need to register the IAzureAdSecuredApiConnector as the GraphApiConnector uses this via constructor injection.  
+When using the AzureAdB2CSecuredApiConnector, don't forget to register the HttpContextAccessor   
 ```csharp  
 public void ConfigureServices(IServiceCollection services)  
 {  
     //... 
 	services.AddTransient<IAzureAdSecuredApiConnector, AzureAdSecuredApiConnector>();
+
     services.AddTransient<IAzureAdB2CSecuredApiConnector, AzureAdB2CSecuredApiConnector>();
+	services.AddHttpContextAccessor(); //aspnetcore 2.1
+	services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); //aspnetcore 2.0
+
     services.AddTransient<IGraphApiConnector, GraphApiConnector>();
 	//...  
 }  
