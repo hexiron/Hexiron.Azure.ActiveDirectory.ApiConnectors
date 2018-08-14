@@ -16,7 +16,6 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
 {
     public class AzureAdB2CSecuredApiConnector : IAzureAdB2CSecuredApiConnector
     {
-        private readonly string[] _requiredScopes;
         private readonly ConfidentialClientApplication _confidentialClientApplication;
         private readonly AzureAdB2COptions _azureAdB2COptions;
 
@@ -24,7 +23,6 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
         {
             _azureAdB2COptions = options.Value;
             ValidateOptions(options);
-            _requiredScopes = _azureAdB2COptions.ApiScopes.Select(x => _azureAdB2COptions.ScopePrefix+"/"+x).ToArray();
             var signedInUserId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userTokenCache = new MsalSessionCache(signedInUserId, httpContextAccessor.HttpContext).GetMsalCacheInstance();
             _confidentialClientApplication = new ConfidentialClientApplication(_azureAdB2COptions.ClientId, _azureAdB2COptions.Authority, _azureAdB2COptions.RedirectUri, new ClientCredential(_azureAdB2COptions.ClientSecret), userTokenCache, null);
@@ -64,7 +62,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
 
         private async Task<AuthenticationResult> GetToken()
         {
-            return await _confidentialClientApplication.AcquireTokenSilentAsync(_requiredScopes, _confidentialClientApplication.Users.FirstOrDefault(), _azureAdB2COptions.Authority, false);
+            return await _confidentialClientApplication.AcquireTokenSilentAsync(_azureAdB2COptions.ApiScopes, _confidentialClientApplication.Users.FirstOrDefault(), _azureAdB2COptions.Authority, false);
         }
 
         private void ValidateOptions(IOptions<AzureAdB2COptions> options)

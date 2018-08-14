@@ -24,7 +24,6 @@
         public string RedirectUri { get; set; }
         public string Authority => $"{Domain}/{SignUpSignInPolicyId}/v2.0";
         public string Domain => $"{_azureAdB2CInstance}/{Tenant}";
-        public string ScopePrefix { get; set; }
 
         // a space seperated list of necessary scopes for accessing the api 
         public string[] ApiScopes { get; set; }
