@@ -18,6 +18,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
     {
         private readonly ConfidentialClientApplication _confidentialClientApplication;
         private readonly AzureAdB2COptions _azureAdB2COptions;
+        private readonly Dictionary<string, string> _defaultHeaders;
 
         public AzureAdB2CSecuredApiConnector(IOptions<AzureAdB2COptions> options, IHttpContextAccessor httpContextAccessor)
         {
@@ -26,17 +27,22 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
             var signedInUserId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userTokenCache = new MsalSessionCache(signedInUserId, httpContextAccessor.HttpContext).GetMsalCacheInstance();
             _confidentialClientApplication = new ConfidentialClientApplication(_azureAdB2COptions.ClientId, _azureAdB2COptions.Authority, _azureAdB2COptions.RedirectUri, new ClientCredential(_azureAdB2COptions.ClientSecret), userTokenCache, null);
+            _defaultHeaders = new Dictionary<string, string>();
         }
         public async Task<HttpResponseMessage> Post(string url, object objectToBePosted)
         {
             var token = await GetToken();
-            return await url.WithOAuthBearerToken(token.AccessToken).PostJsonAsync(objectToBePosted);
+            return await url.WithOAuthBearerToken(token.AccessToken)
+                .WithHeaders(_defaultHeaders)
+                .PostJsonAsync(objectToBePosted);
         }
 
-        public async Task<HttpResponseMessage> Put(string url, object objectToBePosted)
+        public async Task<HttpResponseMessage> Put(string url, object objectToBePutted)
         {
             var token = await GetToken();
-            return await url.WithOAuthBearerToken(token.AccessToken).PostJsonAsync(objectToBePosted);
+            return await url.WithOAuthBearerToken(token.AccessToken)
+                .WithHeaders(_defaultHeaders)
+                .PutJsonAsync(objectToBePutted);
         }
 
         public async Task<T> Get<T>(string url, int requestTimeoutInSec = 60)
@@ -46,6 +52,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
                 var token = await GetToken();
                 return await url.WithOAuthBearerToken(token.AccessToken)
                     .WithTimeout(requestTimeoutInSec)
+                    .WithHeaders(_defaultHeaders)
                     .GetJsonAsync<T>();
             }
             catch (FlurlHttpException ex)
@@ -57,6 +64,18 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
                 }
                 // no need for stacktrace in logging so just throw ex instead of throw
                 throw ex;
+            }
+        }
+
+        public void AddDefaultHeader(string name, string value)
+        {
+            _defaultHeaders.Add(name,value);
+        }
+        public void AddDefaultHeaders(IDictionary<string,string> defaultHeaders)
+        {
+            foreach (var header in defaultHeaders)
+            {
+                _defaultHeaders.Add(header.Key, header.Value);
             }
         }
 
