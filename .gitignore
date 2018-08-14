@@ -328,3 +328,5 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/Test
+/samples/Hexiron.Azure.ActiveDirectory.Sample/Controllers/GraphConnectController.cs

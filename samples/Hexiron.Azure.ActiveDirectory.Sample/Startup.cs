@@ -46,7 +46,7 @@ namespace Hexiron.Azure.ActiveDirectory.Sample
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Example}/{action=Index}/{id?}");
+                    template: "{controller=GraphConnect}/{action=Index}/{id?}");
             });
 
         }
