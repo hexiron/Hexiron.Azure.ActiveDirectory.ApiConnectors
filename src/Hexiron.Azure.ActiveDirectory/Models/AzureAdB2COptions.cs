@@ -27,7 +27,7 @@
         public string ScopePrefix { get; set; }
 
         // a space seperated list of necessary scopes for accessing the api 
-        public string ApiScopes { get; set; }
+        public string[] ApiScopes { get; set; }
 
     }
 }
