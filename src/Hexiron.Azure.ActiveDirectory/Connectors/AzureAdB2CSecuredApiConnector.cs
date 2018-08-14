@@ -76,13 +76,13 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
             {
                 validationErrors.Add("ClientId", "AzureAD clientId is not specified in the settings");
             }
-            if (string.IsNullOrEmpty(options?.Value?.ClientId))
+            if (string.IsNullOrEmpty(options?.Value?.ClientSecret))
             {
                 validationErrors.Add("ClientSecret", "AzureAD clientSecret is not specified in the settings");
             }
             if (string.IsNullOrEmpty(options?.Value?.RedirectUri))
             {
-                validationErrors.Add("ClientSecret", "AzureAD redirectURI is not specified in the settings");
+                validationErrors.Add("RedirectUri", "AzureAD redirectURI is not specified in the settings");
             }
             if (validationErrors.Any())
             {
