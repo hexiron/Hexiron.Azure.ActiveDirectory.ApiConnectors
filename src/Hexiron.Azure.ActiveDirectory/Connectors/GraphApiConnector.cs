@@ -18,7 +18,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
 
         public GraphApiConnector(IAzureAdSecuredApiConnector azureAdSecuredApiConnector, IOptions<AzureAdOptions> options)
         {
-            ValidateOptions(options);
+            ValidateOptions(options, azureAdSecuredApiConnector);
             _azureAdSecuredApiConnector = azureAdSecuredApiConnector;
             _graphApiUrl = $"https://graph.windows.net/{options.Value.Tenant}";
             _version = "api-version=1.6";
@@ -34,8 +34,16 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
             return groups.Values;
         }
 
-        private void ValidateOptions(IOptions<AzureAdOptions> options)
+        private void ValidateOptions(IOptions<AzureAdOptions> options, IAzureAdSecuredApiConnector azureAdSecuredApiConnector)
         {
+            if (azureAdSecuredApiConnector == null)
+            {
+                throw new Exception("No implementation has been registered for IAzureAdSecuredApiConnector");
+            }
+            if (options == null)
+            {
+                throw new Exception("The AzureAdOptions in de config could not be found. Did you register them? IOptions<AzureAdOptions>");
+            }
             var validationErrors = new Dictionary<string, string>();
             if (string.IsNullOrEmpty(options?.Value?.Tenant))
             {
@@ -48,7 +56,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
                 {
                     errormessage += $"{validationError.Key}, ";
                 }
-                throw new ArgumentNullException("The following azureAdSettings are empty: " + errormessage);
+                throw new Exception("The following azureAdSettings are empty: " + errormessage);
             }
         }
     }
