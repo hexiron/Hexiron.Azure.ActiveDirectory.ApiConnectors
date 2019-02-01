@@ -22,45 +22,7 @@ namespace Hexiron.Azure.ActiveDirectory.Models
         public string Authority => $"{Domain}/{DefaultPolicy}/v2.0";
         public string Domain => $"{_azureAdB2CInstance}/{Tenant}";
 
-        public string ScopePrefix { get; set; }
-
         public string[] Scopes { get; set; }
-        // a space seperated list of necessary scopes for accessing the api 
-        public string[] ApiScopes
-        {
-            get
-            {   
-                var scopeList = new List<string>();
-                if (Scopes != null)
-                {
-                    if (!string.IsNullOrEmpty(ScopePrefix))
-                    {
-                        if (ScopePrefix.EndsWith("/"))
-                        {
-                            ScopePrefix = ScopePrefix.Remove(ScopePrefix.Length - 1, 1);
-                        }
-                        foreach (var scope in Scopes)
-                        {
-                            if (scope.ToLower().StartsWith("http"))
-                            {
-                                scopeList.Add(scope);
-                            }
-                            else
-                            {
-
-                                scopeList.Add($"{ScopePrefix}/{scope}");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        return Scopes;
-                    }
-                }
-                
-                return scopeList.ToArray();
-            }
-        }
 
     }
 }

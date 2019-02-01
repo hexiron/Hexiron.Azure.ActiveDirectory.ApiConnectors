@@ -81,7 +81,7 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
 
         private async Task<AuthenticationResult> GetToken()
         {
-            return await _confidentialClientApplication.AcquireTokenSilentAsync(_azureAdB2COptions.ApiScopes, _confidentialClientApplication.Users.FirstOrDefault(), _azureAdB2COptions.Authority, false);
+            return await _confidentialClientApplication.AcquireTokenSilentAsync(_azureAdB2COptions.Scopes, _confidentialClientApplication.Users.FirstOrDefault(), _azureAdB2COptions.Authority, false);
         }
 
         private void ValidateOptions(IOptions<AzureAdB2COptions> options)

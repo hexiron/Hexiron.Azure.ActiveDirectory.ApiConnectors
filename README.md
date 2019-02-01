@@ -54,7 +54,6 @@ See example below:
 		"EditProfilePolicyId": "defined_Policy_from_Azure",
 		"RedirectUri": "https://.../signin-oidc",
 		"ClientSecret": "secret",
-		"ScopePrefix": "https://myb2c.onmicrosoft.com/my-api/",
 		"ApiScopes": "read:companies write:companies" 
 	}
   }

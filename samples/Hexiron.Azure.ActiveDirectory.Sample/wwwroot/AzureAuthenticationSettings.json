@@ -12,8 +12,6 @@
     "ResetPasswordPolicyId": "b2c_1_reset",
     "EditProfilePolicyId": "b2c_1_edit_profile",
     "RedirectUri": "https://localhost:44340//signin-oidc",
-    "ClientSecret": "iSS]1sssdedss-AE68pA5O",
-    "ScopePrefix": "https://myb2c.onmicrosoft.com/my-api/",
-    "ApiScopes": "read:companies write:companies" 
+    "ClientSecret": "iSS]1sssdedss-AE68pA5O"
   }
 }
