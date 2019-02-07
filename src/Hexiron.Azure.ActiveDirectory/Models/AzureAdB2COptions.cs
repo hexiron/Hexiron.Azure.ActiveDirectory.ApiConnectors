@@ -18,6 +18,7 @@ namespace Hexiron.Azure.ActiveDirectory.Models
         public string ClientSecret { get; set; }
         public string Tenant { get; set; }
         public string DefaultPolicy { get; set; }
+        public string ResetPasswordPolicyId { get; set; }
         public string RedirectUri { get; set; }
         public string Authority => $"{Domain}/{DefaultPolicy}/v2.0";
         public string Domain => $"{_azureAdB2CInstance}/{Tenant}";
