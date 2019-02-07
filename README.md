@@ -1,11 +1,13 @@
-# Getting started with ASP.NET Core 2 and Azure AD/B2C OAuth2 flows
+# Connect with API's using the Azure AD or Azure AD B2C Identity provider and OAuth2 flows
 
 [![Build status](https://ci.appveyor.com/api/projects/status/snx0tdnj8930gsr9/branch/master?svg=true)](https://ci.appveyor.com/api/projects/status/snx0tdnj8930gsr9/branch/master?svg=true)  [![license](https://img.shields.io/github/license/hexiron/Hexiron.Azure.ActiveDirectory.svg?maxAge=2592000)](https://github.com/hexiron/Hexiron.Azure.ActiveDirectory/blob/master/LICENSE)  [![NuGet](https://img.shields.io/nuget/v/Hexiron.Azure.ActiveDirectory.svg?maxAge=86400)](https://www.nuget.org/packages/Hexiron.Azure.ActiveDirectory/)
 
-## Attention ##
-This library has easy to use API connector clients to connect with API's which are using the Azure AD or Azure AD B2C identity provider and its OAuth2 flows.  
-If you are looking how to authenticate with Azure AD or Azure AD B2C, please go to [Hexiron.AspNetCore.Authentication.AzureAdMixed](https://github.com/hexiron/Hexiron.AspNetCore.Authentication.AzureAdMixed).  
+### Attention ###
+If you are looking how to authenticate with Azure AD or Azure AD B2C and/or accept JWT tokens from Azure AD or Azure AD B2C, please go to [Hexiron.AspNetCore.Authentication.AzureAdMixed](https://github.com/hexiron/Hexiron.AspNetCore.Authentication.AzureAdMixed).  
 
+## What is it about? ##
+
+This library has easy to use API connector clients to connect with API's which are using the Azure AD or Azure AD B2C identity provider and its OAuth2 flows.
 When accessing an API through one of the connectors described below, it gets in background an access token from the Microsoft identity provider using ADAL for Azure AD and MSAL for Azure B2C and adds it automatically in background to the request.  
 You don't need to worry about getting, storing and maintaining the access token. This library does it for you.
 
