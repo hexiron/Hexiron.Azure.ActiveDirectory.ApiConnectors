@@ -44,16 +44,14 @@ namespace Hexiron.Azure.ActiveDirectory.Models
         public void Load()
         {
             s_sessionLock.EnterReadLock();
-            cache.Deserialize(_httpContext.Session.Get(_cacheId));
+            var blob = _httpContext.Session.Get(_cacheId);
+            if (blob != null) cache.Deserialize(blob);
             s_sessionLock.ExitReadLock();
         }
 
         public void Persist()
         {
             s_sessionLock.EnterWriteLock();
-
-            // Optimistically set HasStateChanged to false. We need to do it early to avoid losing changes made by a concurrent thread.
-            cache.HasStateChanged = false;
 
             // Reflect changes in the persistent store
             _httpContext.Session.Set(_cacheId, cache.Serialize());
@@ -62,19 +60,16 @@ namespace Hexiron.Azure.ActiveDirectory.Models
 
         // Triggered right before MSAL needs to access the cache.
         // Reload the cache from the persistent store in case it changed since the last access.
-        void BeforeAccessNotification(TokenCacheNotificationArgs args)
+        private void BeforeAccessNotification(TokenCacheNotificationArgs args)
         {
             Load();
         }
 
         // Triggered right after MSAL accessed the cache.
-        void AfterAccessNotification(TokenCacheNotificationArgs args)
+        private void AfterAccessNotification(TokenCacheNotificationArgs args)
         {
             // if the access operation resulted in a cache update
-            if (cache.HasStateChanged)
-            {
-                Persist();
-            }
+            if (args.HasStateChanged) Persist();
         }
     }
 }
