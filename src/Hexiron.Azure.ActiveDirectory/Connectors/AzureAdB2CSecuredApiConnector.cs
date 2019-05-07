@@ -47,24 +47,11 @@ namespace Hexiron.Azure.ActiveDirectory.Connectors
 
         public async Task<T> Get<T>(string url, int requestTimeoutInSec = 60)
         {
-            try
-            {
                 var token = await GetToken();
                 return await url.WithOAuthBearerToken(token.AccessToken)
                     .WithTimeout(requestTimeoutInSec)
                     .WithHeaders(_defaultHeaders)
                     .GetJsonAsync<T>();
-            }
-            catch (FlurlHttpException ex)
-            {
-                var statusCode = ex.Call?.Response?.StatusCode;
-                if (statusCode != null && statusCode == HttpStatusCode.NotFound)
-                {
-                    return default(T);
-                }
-                // no need for stacktrace in logging so just throw ex instead of throw
-                throw ex;
-            }
         }
 
         public void AddDefaultHeader(string name, string value)
